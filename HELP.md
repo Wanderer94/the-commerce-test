@@ -1,7 +1,7 @@
 # Read Me First
 The following was discovered as part of building this project:
 
-* The original package name 'the-commerce.the-commerce test' is invalid and this project uses 'thecommerce.thecommerce.test' instead.
+* The original package name 'the-commerce.test' is invalid and this project uses 'thecommerce.test' instead.
 
 # Getting Started
 
