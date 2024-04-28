@@ -8,18 +8,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import thecommerce.test.domain.Member;
 import thecommerce.test.service.MemberService;
 
 import java.util.List;
 
 @Controller
-public class MemberContraller {
+public class MemberController {
 
     private MemberService memberService;
 
     @Autowired
-    public MemberContraller(MemberService memberService) {
+    public MemberController(MemberService memberService) {
         this.memberService = memberService;
     }
 
@@ -31,9 +32,13 @@ public class MemberContraller {
     }
 
     @GetMapping("/api/user/list")
-    public String list(Model model) {
+    public ResponseEntity<List<Member>> list(
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
+            @RequestParam(name = "sort", defaultValue = "joinDate") String sort,
+            Model model) {
         List<Member> members = memberService.findMembers();
-        model.addAttribute("members", members);
-        return "members/memberList";
+
+        return ResponseEntity.ok().body(members);
     }
 }
