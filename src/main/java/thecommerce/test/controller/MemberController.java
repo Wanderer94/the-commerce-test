@@ -6,17 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import thecommerce.test.domain.Member;
 import thecommerce.test.service.MemberService;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Controller
 public class MemberController {
@@ -35,6 +29,7 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    // 2. 회원 목록 조회
     @GetMapping("/api/user/list")
     public ResponseEntity<List<Member>> list(
             @RequestParam(name = "page", defaultValue = "1") int page,
@@ -53,5 +48,31 @@ public class MemberController {
         response.put("totalPages", totalPages);
 
         return ResponseEntity.ok().body(members);
+    }
+
+    // 3. 회원 수정
+    @PostMapping("/api/user/{userid}")
+    public ResponseEntity<Void> updateMember(@PathVariable("userid") Long userId, @RequestBody Member member){
+    // userId를 사용하여 해당 회원을 조회하여 업데이트
+        Optional<Member> optionalMember = memberService.findOne(userId);
+        if (!optionalMember.isPresent()) {
+            // 해당 userId로 회원을 찾을 수 없는 경우
+            return ResponseEntity.notFound().build();
+        }
+
+        Member existingMember = optionalMember.get();
+
+        // memberDetails에서 가져온 필드로 기존 회원 정보를 업데이트
+        if (member.getName() != null) {
+            existingMember.setName(member.getName());
+        }
+        if (member.getEmail() != null) {
+            existingMember.setEmail(member.getEmail());
+        }
+
+        // 회원 정보를 업데이트
+        memberService.update(member, existingMember);
+        // 업데이트가 성공적으로 완료되었음을 클라이언트에게 응답
+        return ResponseEntity.ok().build();
     }
 }

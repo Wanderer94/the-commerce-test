@@ -14,4 +14,5 @@ public interface MemberRepository {
     Optional<Member> findByUserId(String userId);
     Optional<Member> findByEmail(String email);
     Page<Member> findAll(Pageable pageable);
+    Member update(Member member);
 }
