@@ -6,6 +6,7 @@ Clone repository and install dependencies.
 ```bash
 $ git clone https://github.com/Wanderer94/the-commerce-test.git
 $ cd the-commerce-test
+$ ./gradlew build
 ```
 build.Gradle은 다음과 같습니다
 ```bash
