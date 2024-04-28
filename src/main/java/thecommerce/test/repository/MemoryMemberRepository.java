@@ -44,11 +44,6 @@ public class MemoryMemberRepository implements MemberRepository{
                 .findAny();
     }
 
-//    @Override
-//    public List<Member> findAll() {
-//        return new ArrayList<>(store.values());
-//    }
-
     @Override
     public Page<Member> findAll(Pageable pageable) {
         List<Member> allMembers = new ArrayList<>(store.values());
@@ -57,6 +52,10 @@ public class MemoryMemberRepository implements MemberRepository{
         return new PageImpl<>(allMembers.subList(start, end), pageable, allMembers.size());
     }
 
+    @Override
+    public Member update(Member member) {
+        return store.put(member.getId(), member);
+    }
     public void clearStore() {
         store.clear();
     }

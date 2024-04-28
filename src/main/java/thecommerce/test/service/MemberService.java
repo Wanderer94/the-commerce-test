@@ -68,4 +68,32 @@ public class MemberService {
     public Optional<Member> findOne(Long memberId) {
         return memberRepository.findById(memberId);
     }
+
+    // 회원 정보 업데이트
+    public void update(Member member, Member newMember) {
+        // 비어있는 필드를 체크하고 기존의 값을 유지
+        updateIfEmpty(member, newMember);
+
+        memberRepository.save(newMember);
+    }
+
+    private void updateIfEmpty(Member member, Member newMember) {
+        // 회원id, 닉네임, 이름, 전화번호, 이메일주소의 값이 null이 아닐때만 수정
+        if (newMember.getNickName() == null || newMember.getNickName().isEmpty()) {
+            newMember.setNickName(member.getNickName());
+        }
+        if (newMember.getName() == null || newMember.getName().isEmpty()) {
+            newMember.setName(member.getName());
+        }
+        if (newMember.getPhoneNumber() == null || newMember.getPhoneNumber().isEmpty()) {
+            newMember.setPhoneNumber(member.getPhoneNumber());
+        }
+        if (newMember.getEmail() == null || newMember.getEmail().isEmpty()) {
+            newMember.setEmail(member.getEmail());
+        }
+        // 비밀번호가 null이 아니면 적합성 검사 추가
+        if (newMember.getPassword() != null && !newMember.getPassword().isEmpty()) {
+            validatePassword(newMember.getPassword());
+        }
+    }
 }

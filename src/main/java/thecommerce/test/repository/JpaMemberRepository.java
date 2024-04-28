@@ -69,4 +69,10 @@ public class JpaMemberRepository implements MemberRepository{
     private long getTotalCount() {
         return em.createQuery("SELECT COUNT(m) FROM Member m", Long.class).getSingleResult();
     }
+
+    @Override
+    public  Member update(Member member) {
+        em.merge(member);
+        return member;
+    }
 }
