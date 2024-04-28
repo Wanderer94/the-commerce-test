@@ -1,6 +1,10 @@
 package thecommerce.test.repository;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import thecommerce.test.domain.Member;
 
 import java.util.List;
@@ -52,7 +56,17 @@ public class JpaMemberRepository implements MemberRepository{
     }
 
     @Override
-    public List<Member> findAll() {
-        return em.createQuery("select m from Member m", Member.class).getResultList();
+    public Page<Member> findAll(Pageable pageable) {
+        TypedQuery<Member> query = em.createQuery("SELECT m FROM Member m", Member.class);
+        query.setFirstResult((int) pageable.getOffset());
+        query.setMaxResults(pageable.getPageSize());
+        List<Member> members = query.getResultList();
+        long totalCount = getTotalCount();
+
+        return new PageImpl<>(members, pageable, totalCount);
+    }
+
+    private long getTotalCount() {
+        return em.createQuery("SELECT COUNT(m) FROM Member m", Long.class).getSingleResult();
     }
 }

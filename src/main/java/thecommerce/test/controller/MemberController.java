@@ -1,6 +1,7 @@
 package thecommerce.test.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import thecommerce.test.domain.Member;
 import thecommerce.test.service.MemberService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Controller
 public class MemberController {
@@ -37,7 +41,16 @@ public class MemberController {
             @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
             @RequestParam(name = "sort", defaultValue = "joinDate") String sort,
             Model model) {
-        List<Member> members = memberService.findMembers();
+        Page<Member> membersPage = memberService.findMembers(page, pageSize, sort);
+
+        List<Member> members = membersPage.getContent();
+        long totalElements = membersPage.getTotalElements();
+        int totalPages = membersPage.getTotalPages();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("members", members);
+        response.put("totalElements", totalElements);
+        response.put("totalPages", totalPages);
 
         return ResponseEntity.ok().body(members);
     }

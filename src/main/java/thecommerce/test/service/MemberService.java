@@ -2,6 +2,9 @@ package thecommerce.test.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import thecommerce.test.domain.Member;
 import thecommerce.test.repository.MemberRepository;
@@ -54,9 +57,11 @@ public class MemberService {
     }
 
 
-    //전체 회원 조회
-    public List<Member> findMembers() {
-        return memberRepository.findAll();
+    //회원 목록 조회
+    public Page<Member> findMembers(int page, int pageSize, String sort) {
+        Sort.Order order = Sort.Order.asc(sort);
+        PageRequest pageRequest = PageRequest.of(page -1, pageSize,Sort.by(order));
+        return memberRepository.findAll(pageRequest);
     }
 
     // 특정 회원 조회

@@ -1,5 +1,8 @@
 package thecommerce.test.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import thecommerce.test.domain.Member;
 
@@ -41,10 +44,17 @@ public class MemoryMemberRepository implements MemberRepository{
                 .findAny();
     }
 
+//    @Override
+//    public List<Member> findAll() {
+//        return new ArrayList<>(store.values());
+//    }
 
     @Override
-    public List<Member> findAll() {
-        return new ArrayList<>(store.values());
+    public Page<Member> findAll(Pageable pageable) {
+        List<Member> allMembers = new ArrayList<>(store.values());
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), allMembers.size());
+        return new PageImpl<>(allMembers.subList(start, end), pageable, allMembers.size());
     }
 
     public void clearStore() {
