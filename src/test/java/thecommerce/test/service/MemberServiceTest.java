@@ -1,6 +1,7 @@
 package thecommerce.test.service;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import thecommerce.test.domain.Member;
@@ -20,6 +21,10 @@ class MemberServiceTest {
     public void beforeEach(){
         memberRepository = new MemoryMemberRepository();
         memberService = new MemberService(memberRepository);
+    }
+    @AfterEach
+    public void afterEach(){
+        memberRepository.clearStore();
     }
 
     @Test
