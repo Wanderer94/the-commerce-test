@@ -1,15 +1,31 @@
 package thecommerce.test.domain;
 
-import org.hibernate.query.derived.AnonymousTupleEmbeddedEntityIdentifierMapping;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "members")
 public class Member {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "userid")
     private String userId;
+
+    @Column(name = "password")
     private String password;
+
+    @Column(name = "nickname")
     private String nickName;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "phone_number")
     private String phoneNumber;
+
+    @Column(name = "email")
     private String email;
+
 
     public Long getId() {
         return id;
