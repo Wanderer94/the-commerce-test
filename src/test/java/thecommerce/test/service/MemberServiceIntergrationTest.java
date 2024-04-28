@@ -130,4 +130,31 @@ class MemberServiceIntergrationTest {
         assertThat(foundMember.getPassword()).isEqualTo(member.getPassword());
         assertThat(foundMember.getEmail()).isEqualTo(member.getEmail());
     }
+
+    @Test
+    void updateMember() {
+        // given
+        Member member = new Member();
+        member.setUserId("test");
+        member.setPassword("12345678!");
+        member.setEmail("test@thecommerce.com");
+        Long memberId = memberService.join(member);
+
+        // 새로운 멤버 정보 생성
+        Member updatedMember = new Member();
+        updatedMember.setUserId("test"); // 동일한 아이디로 업데이트
+        updatedMember.setPassword("newPassword123!"); // 새로운 비밀번호
+        updatedMember.setEmail("updated_email@example.com"); // 업데이트된 이메일
+
+        // when
+        memberService.update(member,updatedMember);
+
+        // then
+        // 업데이트된 멤버 정보 확인
+        Member foundMember = memberService.findOne(memberId).orElse(null);
+        assertThat(foundMember).isNotNull();
+        assertThat(foundMember.getUserId()).isEqualTo(updatedMember.getUserId()); // 아이디가 변경되지 않았는지 확인
+        assertThat(foundMember.getPassword()).isEqualTo(updatedMember.getPassword()); // 비밀번호가 업데이트되었는지 확인
+        assertThat(foundMember.getEmail()).isEqualTo(updatedMember.getEmail()); // 이메일이 업데이트되었는지 확인
+    }
 }
