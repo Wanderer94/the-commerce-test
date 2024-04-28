@@ -84,13 +84,13 @@ class MemberServiceIntergrationTest {
         Member member1 = new Member();
         member1.setUserId("user1");
         member1.setPassword("12345678!");
-        member1.setEmail("user1@example.com");
+        member1.setEmail("user1@thecommerce.com");
         memberService.join(member1);
 
         Member member2 = new Member();
         member2.setUserId("user2");
         member2.setPassword("12345678!");
-        member2.setEmail("user2@example.com");
+        member2.setEmail("user2@thecommerce.com");
         memberService.join(member2);
 
         // when
@@ -144,7 +144,7 @@ class MemberServiceIntergrationTest {
         Member updatedMember = new Member();
         updatedMember.setUserId("test"); // 동일한 아이디로 업데이트
         updatedMember.setPassword("newPassword123!"); // 새로운 비밀번호
-        updatedMember.setEmail("updated_email@example.com"); // 업데이트된 이메일
+        updatedMember.setEmail("updated_email@thecommerce.com"); // 업데이트된 이메일
 
         // when
         memberService.update(member,updatedMember);
@@ -180,5 +180,46 @@ class MemberServiceIntergrationTest {
         Member foundMember = memberService.findOne(memberId).orElse(null);
         assertThat(foundMember).isNotNull();
         assertThat(foundMember.getEmail()).isEqualTo(member.getEmail()); // 비어있는 이메일 필드가 업데이트되지 않았는지 확인
+    }
+
+    @Test
+    void updateMember_NotExist() {
+        // given
+        Member member = new Member();
+        member.setUserId("test");
+        member.setPassword("12345678!");
+        member.setEmail("test@thecommerce.com");
+
+        Member newMember = new Member();
+        member.setUserId("nonExistingUser");
+        member.setPassword("12345678!");
+        member.setEmail("nonexisting@thecommerce.com");
+
+        // when, then
+        // 존재하지 않는 회원을 업데이트하려고 시도하면 예외가 발생해야 함
+        assertThrows(IllegalArgumentException.class, () -> memberService.update(member,newMember));
+    }
+
+    @Test
+    void updateMember_withInvalidPassword() {
+        // given
+        Member existingMember = new Member();
+        existingMember.setUserId("existingUser");
+        existingMember.setPassword("12345678!");
+        existingMember.setEmail("existing@thecommerce.com");
+        Long memberId = memberService.join(existingMember);
+
+        // 새로운 멤버 정보 생성 (비밀번호가 적합하지 않은 경우)
+        Member updatedMember = new Member();
+        updatedMember.setUserId("existingUser"); // 동일한 아이디로 업데이트
+        updatedMember.setPassword("1234"); // 적합하지 않은 비밀번호
+        updatedMember.setEmail("updated_email@thecommerce.com"); // 이메일은 유효한 값으로 설정
+
+        // when, then
+        // 적합하지 않은 비밀번호로 업데이트를 시도하면 예외가 발생해야 함
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> memberService.update(existingMember, updatedMember));
+
+        // 예외 메시지가 올바른지 확인
+        assertThat(e.getMessage()).isEqualTo("비밀번호는 최소 8자 이상이어야 하고, 특수문자를 포함해야 합니다.");
     }
 }
