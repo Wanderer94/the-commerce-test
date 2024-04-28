@@ -1,6 +1,9 @@
 package thecommerce.test.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import thecommerce.test.domain.Member;
+import thecommerce.test.repository.MemberRepository;
 import thecommerce.test.repository.MemoryMemberRepository;
 
 import java.util.List;
@@ -8,7 +11,12 @@ import java.util.Optional;
 
 public class MemberService {
 
-    private final MemoryMemberRepository memberRepository = new MemoryMemberRepository();
+    private final MemberRepository memberRepository;
+
+    public MemberService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
+
     //회원 가입
     public Long join(Member member) {
         // 1. 동일 아이디를 가지고 있는 중복 회원 가입 불가

@@ -1,8 +1,10 @@
 package thecommerce.test.service;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import thecommerce.test.domain.Member;
+import thecommerce.test.repository.MemoryMemberRepository;
 
 import java.util.Optional;
 
@@ -11,7 +13,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MemberServiceTest {
 
-    MemberService memberService = new MemberService();
+    MemberService memberService;
+    MemoryMemberRepository memberRepository;
+
+    @BeforeEach
+    public void beforeEach(){
+        memberRepository = new MemoryMemberRepository();
+        memberService = new MemberService(memberRepository);
+    }
 
     @Test
     void join() {

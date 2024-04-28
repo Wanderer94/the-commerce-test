@@ -1,5 +1,6 @@
 package thecommerce.test.repository;
 
+import org.springframework.stereotype.Repository;
 import thecommerce.test.domain.Member;
 
 import java.util.*;
