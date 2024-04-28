@@ -3,6 +3,9 @@ package thecommerce.test.repository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import thecommerce.test.domain.Member;
 
 import java.util.List;
@@ -53,9 +56,13 @@ public class MemoryMemberRepositoryTest {
         member2.setName("test2");
         repository.save(member2);
 
-        List<Member> result = repository.findAll();
+        // 페이징 정보 설정
+        Pageable pageable = PageRequest.of(0, 10);
 
-        assertThat(result.size()).isEqualTo(2);
+        // 페이징을 고려하여 findAll 메서드 호출
+        Page<Member> result = repository.findAll(pageable);
 
+        // 결과 검증
+        assertThat(result.getContent().size()).isEqualTo(2);
     }
 }
