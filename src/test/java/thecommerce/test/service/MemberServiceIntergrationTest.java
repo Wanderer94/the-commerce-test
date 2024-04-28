@@ -95,7 +95,7 @@ class MemberServiceIntergrationTest {
 
         // when
         // 페이징 정보 설정
-        int page = 1; // 페이지 번호 (0부터 시작)
+        int page = 1; // 페이지 번호 (1부터 시작)
         int pageSize = 10; // 페이지 크기
         String sort = "joinDate"; // 정렬 기준
 
