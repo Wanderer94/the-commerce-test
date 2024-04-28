@@ -157,4 +157,28 @@ class MemberServiceIntergrationTest {
         assertThat(foundMember.getPassword()).isEqualTo(updatedMember.getPassword()); // 비밀번호가 업데이트되었는지 확인
         assertThat(foundMember.getEmail()).isEqualTo(updatedMember.getEmail()); // 이메일이 업데이트되었는지 확인
     }
+
+    @Test
+    void updateMember_Empty() {
+        // given
+        Member member = new Member();
+        member.setUserId("test");
+        member.setPassword("12345678!");
+        member.setEmail("test@thecommerce.com");
+        Long memberId = memberService.join(member);
+
+        // 새로운 멤버 정보 생성 (비어있는 필드)
+        Member updatedMember = new Member();
+        updatedMember.setUserId("test"); // 동일한 아이디로 업데이트
+        updatedMember.setEmail(""); // 비어있는 이메일 설정
+
+        // when
+        memberService.update(member, updatedMember);
+
+        // then
+        // 업데이트된 멤버 정보 확인
+        Member foundMember = memberService.findOne(memberId).orElse(null);
+        assertThat(foundMember).isNotNull();
+        assertThat(foundMember.getEmail()).isEqualTo(member.getEmail()); // 비어있는 이메일 필드가 업데이트되지 않았는지 확인
+    }
 }
