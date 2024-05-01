@@ -1,5 +1,6 @@
 package thecommerce.test.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,8 @@ import thecommerce.test.service.MemberService;
 
 import java.util.*;
 
-@Controller
+@RestController
+@Tag(name = "Member", description = "Member API")
 public class MemberController {
 
     private MemberService memberService;
